@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: youtubedownloader-server
+    runtime: python
+    plan: free
+    region: frankfurt
+    buildCommand: pip install -r requirements.txt && (command -v ffmpeg || (mkdir -p "$HOME/bin" && curl -fsSL https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz | tar -xJ --strip-components=1 -C "$HOME/bin" --wildcards '*/ffmpeg' '*/ffprobe'))
+    startCommand: PATH="$HOME/bin:$PATH" uvicorn main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    autoDeployTrigger: commit
